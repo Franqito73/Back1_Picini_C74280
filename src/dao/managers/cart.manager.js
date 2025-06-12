@@ -1,10 +1,10 @@
-const CartModel = require ('../models/cart.model');
-const ProductModel = require ('../models/product.model');
+const CartModel = require('../models/cart.model');
+const ProductModel = require('../models/product.model');
 
 class CartManager {
   async createCart() {
     try {
-      const newCart = new Cart({ products: [] });
+      const newCart = new CartModel({ products: [] });
       return await newCart.save();
     } catch (error) {
       throw new Error('Error creando carrito: ' + error.message);
@@ -20,20 +20,17 @@ class CartManager {
     }
   }
 
-  async addProductToCart(cartId, productId) {
+  async addProduct(cartId, productId, quantity = 1) {
     try {
       const cart = await CartModel.findById(cartId);
       if (!cart) throw new Error('Carrito no encontrado');
 
-      
       const productIndex = cart.products.findIndex(p => p.product.toString() === productId);
-      
+
       if (productIndex >= 0) {
-       
-        cart.products[productIndex].quantity += 1;
+        cart.products[productIndex].quantity += quantity;
       } else {
-       
-        cart.products.push({ product: productId, quantity: 1 });
+        cart.products.push({ product: productId, quantity });
       }
 
       await cart.save();
@@ -43,19 +40,7 @@ class CartManager {
     }
   }
 
-   async getCartByIdWithPopulate(cid) {
-    try {
-      const cart = await CartModel.findById(cid)
-        .populate('products.product');
-
-      return cart;
-    } catch (error) {
-      console.error('Error al obtener carrito con populate:', error);
-      throw error;
-    }
-  }
-
-  async removeProductFromCart(cartId, productId) {
+  async removeProduct(cartId, productId) {
     try {
       const cart = await CartModel.findById(cartId);
       if (!cart) throw new Error('Carrito no encontrado');
@@ -69,6 +54,34 @@ class CartManager {
     }
   }
 
+  async updateCartProducts(cartId, products) {
+    try {
+      const cart = await CartModel.findById(cartId);
+      if (!cart) throw new Error('Carrito no encontrado');
+
+      cart.products = products;
+      await cart.save();
+      return cart;
+    } catch (error) {
+      throw new Error('Error actualizando productos del carrito: ' + error.message);
+    }
+  }
+
+  async updateProductQuantity(cartId, productId, quantity) {
+    try {
+      const cart = await CartModel.findById(cartId);
+      if (!cart) throw new Error('Carrito no encontrado');
+
+      const productInCart = cart.products.find(p => p.product.toString() === productId);
+      if (!productInCart) throw new Error('Producto no encontrado en el carrito');
+
+      productInCart.quantity = quantity;
+      await cart.save();
+      return cart;
+    } catch (error) {
+      throw new Error('Error modificando cantidad del producto: ' + error.message);
+    }
+  }
 
   async clearCart(cartId) {
     try {
@@ -85,3 +98,4 @@ class CartManager {
 }
 
 module.exports = CartManager;
+

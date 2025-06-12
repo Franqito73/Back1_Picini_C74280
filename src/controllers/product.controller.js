@@ -3,8 +3,32 @@ const productManager = new ProductManager();
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await productManager.getProducts();
-    res.status(200).json({ status: 'success', payload: products });
+    const { limit = 10, page = 1, sort, query } = req.query;
+    const result = await productManager.getProductsPaginated({ limit, page, sort, query });
+
+    if (result.status === 'error') {
+      return res.status(500).json({ status: 'error', message: result.message });
+    }
+
+    res.status(200).json(result);
+
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+};
+
+const updateProduct = async (req, res) => {
+  try {
+    const { pid } = req.params;
+    const updatedFields = req.body;
+
+    const updatedProduct = await productManager.updateProduct(pid, updatedFields);
+
+    if (!updatedProduct) {
+      return res.status(404).json({ status: 'error', message: 'Producto no encontrado' });
+    }
+
+    res.status(200).json({ status: 'success', payload: updatedProduct });
   } catch (error) {
     res.status(500).json({ status: 'error', message: error.message });
   }
@@ -36,8 +60,28 @@ const createProduct = async (req, res) => {
   }
 };
 
+const deleteProduct = async (req, res) => {
+  try {
+    const { pid } = req.params;
+
+    const deleted = await productManager.deleteProduct(pid);
+
+    if (!deleted) {
+      return res.status(404).json({ status: 'error', message: 'Producto no encontrado' });
+    }
+
+    res.status(200).json({ status: 'success', message: 'Producto eliminado correctamente' });
+
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+};
+
+
 module.exports = {
   getAllProducts,
   createProduct,
-  getProductById
+  getProductById,
+  updateProduct,
+  deleteProduct 
 };
