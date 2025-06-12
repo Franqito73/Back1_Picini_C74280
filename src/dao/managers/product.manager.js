@@ -2,6 +2,16 @@ const ProductModel = require('../models/product.model');
 
 
 class ProductManager {
+
+async getProducts() {
+    try {
+      return await ProductModel.find({}).lean();
+    } catch (error) {
+      console.error('Error al obtener productos:', error);
+      throw error;
+    }
+}
+
  async getProductsPaginated({ limit = 10, page = 1, sort, query }) {
   try{
     const filter = {};
@@ -49,6 +59,16 @@ class ProductManager {
       return { status: 'error', message: error.message };
     }
   }
+
+  async getProductById(id) {
+    try {
+      return await ProductModel.findById(id).lean();
+    } catch (error) {
+      console.error('Error al obtener producto por ID:', error);
+      throw error;
+    }
+  }
+
 
   async addProduct(product) {
     try {

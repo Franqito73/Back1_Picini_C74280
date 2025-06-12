@@ -19,7 +19,8 @@ const handlebars = hbs.create({
         total += item.quantity * item.product.price;
       });
       return total;
-    }
+    },
+    calcSubtotal: (quantity, price) => quantity * price 
   }
 });
 

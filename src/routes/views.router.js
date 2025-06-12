@@ -47,7 +47,6 @@ router.get('/products', async (req, res) => {
       totalPages: result.totalPages,
       sort,
       query,
-      cartId: '665fb8e4e5aa72ec2fa0c91f'
     });
 
   } catch (error) {
@@ -61,10 +60,15 @@ router.get('/products/:pid', async (req, res) => {
     const productId = req.params.pid;
     const product = await productManager.getProductById(productId);
     if (!product) return res.status(404).send('Producto no encontrado');
-    res.render('productDetail', { product });
+    res.render('productDetail', { product, cartId: '684b496747b4cdb366960cd3' });
   } catch (error) {
     res.status(500).send(error.message);
   }
+});
+
+router.get('/cart', async (req, res) => {
+  const defaultCartId = '684b496747b4cdb366960cd3';
+  res.redirect(`/cart/${defaultCartId}`);
 });
 
 
@@ -78,11 +82,6 @@ router.get('/cart/:cid', async (req, res) => {
   } catch (error) {
     res.status(500).send(error.message);
   }
-});
-
-router.get('/cart', async (req, res) => {
-  const testCartId = '665fb8e4e5aa72ec2fa0c91f'; 
-  res.redirect(`/cart/${testCartId}`);
 });
 
 module.exports = router;
