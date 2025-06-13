@@ -3,10 +3,10 @@
 <ul>
   {{#each products}}
     <li>
+      <img src="{{this.thumbnail}}" alt="{{this.title}}" style="max-width: 100px;" />
       <h3>{{this.title}}</h3>
       <p>Precio: ${{this.price}}</p>
       <a href="/products/{{this._id}}">Ver detalle</a>
-      <button>Agregar al carrito</button>
     </li>
   {{/each}}
 </ul>
