@@ -13,7 +13,7 @@ passport.use(
   'jwt',
   new JwtStrategy(options, async (jwt_payload, done) => {
     try {
-      const user = await UserModel.findById(jwt_payload.id).select('-password'); // no enviar contraseña
+      const user = await UserModel.findById(jwt_payload.id).select('-password');
       if (user) {
         return done(null, user);
       } else {
