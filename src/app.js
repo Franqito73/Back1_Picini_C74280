@@ -5,6 +5,8 @@ const path = require('path');
 const productsRouter = require('./routes/product.router');
 const cartsRouter = require('./routes/cart.router');
 const viewsRouter = require('./routes/views.router');
+const sessionRouter = require('./routes/session.router.js');
+const passport = require('./config/passport-jwt.config');
 
 const app = express();
 
@@ -31,11 +33,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(passport.initialize());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/', viewsRouter);
+app.use('/api/sessions', sessionRouter);
 
 module.exports = app;
