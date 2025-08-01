@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const ProductManager = require('../dao/managers/product.manager');
-const CartManager = require('../dao/managers/cart.manager');
+const ProductDAO = require('../dao/product.dao.js');
+const CartDAO = require('../dao/cart.dao.js');
 
-const productManager = new ProductManager();
-const cartManager = new CartManager();
+const productDAO = new ProductDAO();
+const cartDAO = new CartDAO();
 
 
 router.get('/', async (req, res) => {
   try {
     const { page = 1, limit = 10, sort, ...filters } = req.query;
 
-    const { products, pagination } = await productManager.getProductsPaginated(
+    const { products, pagination } = await productDAO.getProductsPaginated(
       parseInt(page),
       parseInt(limit),
       sort === 'asc' ? 1 : sort === 'desc' ? -1 : null,
@@ -31,7 +31,7 @@ router.get('/products', async (req, res) => {
   try {
     const { limit = 10, page = 1, sort, query } = req.query;
 
-    const result = await productManager.getProductsPaginated({ limit, page, sort, query });
+    const result = await productDAO.getProductsPaginated({ limit, page, sort, query });
 
     if (result.status === 'error') {
       return res.status(500).render('error', { message: result.message });
@@ -58,7 +58,7 @@ router.get('/products', async (req, res) => {
 router.get('/products/:pid', async (req, res) => {
   try {
     const productId = req.params.pid;
-    const product = await productManager.getProductById(productId);
+    const product = await productDAO.getProductById(productId);
     if (!product) return res.status(404).send('Producto no encontrado');
     res.render('productDetail', { product, cartId: '684b496747b4cdb366960cd3' });
   } catch (error) {
@@ -75,7 +75,7 @@ router.get('/cart', async (req, res) => {
 router.get('/cart/:cid', async (req, res) => {
   try {
     const cartId = req.params.cid;
-    const cart = await cartManager.getCartById(cartId);
+    const cart = await cartDAO.getCartById(cartId);
     if (!cart) return res.status(404).send('Carrito no encontrado');
     res.render('cart', { cart });
     console.log('Cart:', cart);

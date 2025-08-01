@@ -1,4 +1,4 @@
-# Proyecto Final Backend-1 C74280
+# Proyecto Final Backend-2 C75280
 
 Este proyecto es un backend funcional para un e-commerce, desarrollado con Node.js y Express, que permite gestionar productos, carritos de compras, vistas con Handlebars y persistencia de datos en MongoDB.
 
@@ -58,11 +58,11 @@ Este proyecto es un backend funcional para un e-commerce, desarrollado con Node.
 * Cloná el repositorio:
 
 ```bash
-git clone https://github.com/Franqito73/Back1_Picini_C74280
+git clone https://github.com/Franqito73/Back1_Picini_C75280
 ```
 * Accede al directorio del proyecto
 ```bash
-cd Back1_Picini_C74280
+cd Back1_Picini_C75280
 ```
 * Instalá las dependencias
 ```bash

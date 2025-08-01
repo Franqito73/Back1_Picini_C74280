@@ -1,7 +1,7 @@
 const ProductModel = require('../models/product.model');
 
 
-class ProductManager {
+class ProductDAO {
 
 async getProducts() {
     try {
@@ -98,4 +98,4 @@ async getProducts() {
   }
 }
 
-module.exports = ProductManager;
+module.exports = ProductDAO;

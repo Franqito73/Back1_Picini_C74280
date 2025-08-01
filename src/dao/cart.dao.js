@@ -1,7 +1,7 @@
 const CartModel = require('../models/cart.model');
 const ProductModel = require('../models/product.model');
 
-class CartManager {
+class CartDAO {
   async createCart() {
     try {
       const newCart = new CartModel({ products: [] });
@@ -24,6 +24,9 @@ class CartManager {
     try {
       const cart = await CartModel.findById(cartId);
       if (!cart) throw new Error('Carrito no encontrado');
+      
+      const productExists = await ProductModel.findById(productId);
+      if (!productExists) throw new Error('Producto no encontrado');
 
       const productIndex = cart.products.findIndex(p => p.product.toString() === productId);
 
@@ -97,5 +100,4 @@ class CartManager {
   }
 }
 
-module.exports = CartManager;
-
+module.exports = CartDAO;

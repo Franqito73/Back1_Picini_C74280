@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const CartManager = require ('../dao/cart.dao.js');
+
+const cartManager =new CartManager();
 
 const userSchema = new mongoose.Schema({
   first_name: {
@@ -33,6 +36,19 @@ const userSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true
+});
+
+userSchema.pre('save', async function (next) {
+  try{
+    if (!this.cart) {
+    const newCart = await cartManager.createCart();
+    console.log('Nuevo carrito creado:', newCart);
+    this.cart = newCart._id;
+  }
+  next();
+  }catch(error){
+    next(error)
+  }
 });
 
 const UserModel = mongoose.model('User', userSchema);

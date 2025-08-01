@@ -1,10 +1,10 @@
-const ProductManager = require('../dao/managers/product.manager');
-const productManager = new ProductManager();
+const ProductDAO = require('../dao/product.dao.js');
+const productDAO = new ProductDAO();
 
 const getAllProducts = async (req, res) => {
   try {
     const { limit = 10, page = 1, sort, query } = req.query;
-    const result = await productManager.getProductsPaginated({ limit, page, sort, query });
+    const result = await productDAO.getProductsPaginated({ limit, page, sort, query });
 
     if (result.status === 'error') {
       return res.status(500).json({ status: 'error', message: result.message });
@@ -22,7 +22,7 @@ const updateProduct = async (req, res) => {
     const { pid } = req.params;
     const updatedFields = req.body;
 
-    const updatedProduct = await productManager.updateProduct(pid, updatedFields);
+    const updatedProduct = await productDAO.updateProduct(pid, updatedFields);
 
     if (!updatedProduct) {
       return res.status(404).json({ status: 'error', message: 'Producto no encontrado' });
@@ -37,7 +37,7 @@ const updateProduct = async (req, res) => {
 const getProductById = async (req, res) => {
   try {
     const { pid } = req.params;
-    const product = await productManager.getProductById(pid);
+    const product = await productDAO.getProductById(pid);
 
     if (!product) {
       return res.status(404).render('error', { message: 'Producto no encontrado' });
@@ -53,7 +53,7 @@ const getProductById = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
-    const newProduct = await productManager.addProduct(req.body);
+    const newProduct = await productDAO.addProduct(req.body);
     res.status(201).json({ status: 'success', payload: newProduct });
   } catch (error) {
     res.status(500).json({ status: 'error', message: error.message });
@@ -64,7 +64,7 @@ const deleteProduct = async (req, res) => {
   try {
     const { pid } = req.params;
 
-    const deleted = await productManager.deleteProduct(pid);
+    const deleted = await productDAO.deleteProduct(pid);
 
     if (!deleted) {
       return res.status(404).json({ status: 'error', message: 'Producto no encontrado' });
