@@ -1,4 +1,4 @@
-const CartDAO = require('../dao/cart.dao');
+const CartDAO = require('../dao/cart.dao.js');
 const cartDAO = new CartDAO();
 
 class CartService {
