@@ -3,8 +3,8 @@ const cors = require('cors');
 const hbs = require('express-handlebars');
 const path = require('path');
 const productsRouter = require('./routes/product.router');
-const cartsRouter = require('./routes/cart.router');
-const viewsRouter = require('./routes/views.router');
+const cartsRouter = require('./routes/cart.router.js');
+const viewsRouter = require('./routes/views.router.js');
 const sessionRouter = require('./routes/session.router.js');
 const passport = require('./config/passport-jwt.config');
 
@@ -40,6 +40,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/products', productsRouter);
 app.use('/api/cart', cartsRouter);
 app.use('/', viewsRouter);
-app.use('/api/sessions', sessionRouter);
+app.use('api/sessions', sessionRouter);
 
 module.exports = app;

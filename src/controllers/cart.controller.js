@@ -31,7 +31,7 @@ const addProductToCart = async (req, res) => {
     const { cid, pid } = req.params;
     const { quantity = 1 } = req.body;
 
-    const updatedCart = await cartService.addProduct(cid, pid, quantity);
+    const updatedCart = await cartService.addProductToCart(cid, pid, quantity);
 
     res.json({ status: 'success', payload: updatedCart });
   } catch (error) {
@@ -42,7 +42,7 @@ const addProductToCart = async (req, res) => {
 const removeProductFromCart = async (req, res) => {
   try {
     const { cid, pid } = req.params;
-    const updatedCart = await cartService.removeProduct(cid, pid);
+    const updatedCart = await cartService.removeProductFromCart(cid, pid);
 
     if (!updatedCart) {
       return res.status(404).json({ status: 'error', message: 'Carrito o producto no encontrado' });

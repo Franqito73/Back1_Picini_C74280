@@ -9,7 +9,7 @@
     <p><strong>Stock:</strong> {{product.stock}}</p>
     <p><strong>Categoría:</strong> {{product.category}}</p>
 
-    <form id="addToCartForm" action="/api/carts/{{cartId}}/product/{{product._id}}" method="POST" class="add-to-cart-form">
+    <form id="addToCartForm" action="/api/cart/{{cartId}}/products/{{product._id}}" method="POST" class="add-to-cart-form">
       <label for="quantity">Cantidad:</label>
       <input
         type="number"
