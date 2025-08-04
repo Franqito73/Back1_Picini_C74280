@@ -1,4 +1,6 @@
-const cartService = require('../services/cart.service.js');
+const CartService = require('../services/cart.service.js');
+
+const cartService  = new CartService ();
 
 const createCart = async (req, res) => {
   try {
