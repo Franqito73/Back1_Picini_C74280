@@ -1,10 +1,13 @@
 const CartService = require('../services/cart.service.js');
+const sendSMS = require('../utils/twilio');
 
 const cartService  = new CartService ();
 
 const createCart = async (req, res) => {
   try {
     const newCart = await cartService.createCart();
+    await sendSMS(process.env.TWILIO_TEST_PHONE, `Nuevo carrito creado con ID: ${newCart._id}`);
+
     res.status(201).json({ status: 'success', payload: newCart });
   } catch (error) {
     res.status(500).json({ status: 'error', message: error.message });

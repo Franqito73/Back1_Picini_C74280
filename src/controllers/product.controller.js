@@ -1,5 +1,6 @@
 const ProductService = require('../services/product.service.js');
 const productService = new ProductService();
+const sendSMS = require('../utils/twilio');
 
 const getAllProducts = async (req, res) => {
   try {
@@ -33,6 +34,9 @@ const getProductById = async (req, res) => {
 const createProduct = async (req, res) => {
   try {
     const newProduct = await productService.create(req.body);
+
+    await sendSMS(process.env.TWILIO_TEST_PHONE, `Nuevo producto creado: ${newProduct.name}`);
+
     res.status(201).json({ status: 'success', payload: newProduct });
   } catch (error) {
     res.status(500).json({ status: 'error', message: error.message });

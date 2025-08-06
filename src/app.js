@@ -7,7 +7,8 @@ const cartsRouter = require('./routes/cart.router.js');
 const viewsRouter = require('./routes/views.router.js');
 const sessionRouter = require('./routes/session.router.js');
 const passport = require('./config/passport-jwt.config');
-
+const testRoutes = require('./routes/test.router.js');
+const errorHandler = require('./middlewares/errorHandler');
 const app = express();
 
 
@@ -40,6 +41,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/products', productsRouter);
 app.use('/api/cart', cartsRouter);
 app.use('/', viewsRouter);
-app.use('api/sessions', sessionRouter);
+app.use('/api/sessions', sessionRouter);
+
+app.use('/test', testRoutes);
+
+app.use(errorHandler);
 
 module.exports = app;

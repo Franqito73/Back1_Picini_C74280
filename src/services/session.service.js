@@ -1,16 +1,18 @@
-const UserModel = require('../models/user.model.js');
+const userModel = require('../models/user.model.js');
 const { createHash, isValidPassword } = require('../utils/pass.js');
 const jwt = require('jsonwebtoken');
+
+
 const SECRET_KEY = process.env.JWT_SECRET || 'jwtSecretFranco123';
 
 const register = async ({ first_name, last_name, email, age, password }) => {
-  const existingUser = await UserModel.findOne({ email });
+  const existingUser = await userModel.findOne({ email });
   if (existingUser) {
     throw new Error('El usuario ya existe.');
   }
 
   const hashedPassword = createHash(password);
-  const newUser = new UserModel({
+  const newUser = new userModel({
     first_name,
     last_name,
     email,
@@ -28,7 +30,7 @@ const register = async ({ first_name, last_name, email, age, password }) => {
 };
 
 const login = async ({ email, password }) => {
-  const user = await UserModel.findOne({ email });
+  const user = await userModel.findOne({ email });
   if (!user) throw new Error('Usuario no encontrado');
 
   const isPasswordValid = isValidPassword(user, password);

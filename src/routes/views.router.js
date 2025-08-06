@@ -6,7 +6,6 @@ const CartDAO = require('../dao/cart.dao.js');
 const productDAO = new ProductDAO();
 const cartDAO = new CartDAO();
 
-
 router.get('/', async (req, res) => {
   try {
     const { page = 1, limit = 10, sort, ...filters } = req.query;
