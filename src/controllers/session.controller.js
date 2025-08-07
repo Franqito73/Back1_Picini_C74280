@@ -1,7 +1,7 @@
 const sessionService = require('../services/session.service');
 const UserDTO = require('../dto/user.dto');
 const userModel = require('../models/user.model');
-const { createHash } = require('../utils/pass');
+const { createHash, isValidPassword } = require('../utils/pass');
 const { sendPasswordResetEmail } = require('../services/email.service');
 
 const registerUser = async (req, res) => {
@@ -54,6 +54,7 @@ const forgotPassword = async (req, res) => {
   }
 };
 
+
 const verifyResetToken = async (req, res) => {
   try {
     const { token } = req.params;
@@ -64,12 +65,13 @@ const verifyResetToken = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(400).json({ message: "Token inválido o expirado" });
+      return res.status(400).json({ status: 'error', message: 'Token inválido o expirado' });
     }
 
-    res.status(200).json({ message: "Token válido", email: user.email });
+    res.status(200).json({ status: 'success', message: 'Token válido', token, email: user.email });
   } catch (error) {
-    res.status(500).json({ message: "Error al verificar token" });
+    console.error("Error al verificar token:", error.message);
+    res.status(500).json({ status: 'error', message: 'Error al verificar token' });
   }
 };
 
@@ -78,13 +80,22 @@ const resetPassword = async (req, res) => {
     const { token } = req.params;
     const { newPassword } = req.body;
 
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ status: 'error', message: 'La nueva contraseña es inválida.' });
+    }
+
     const user = await userModel.findOne({
       resetPasswordToken: token,
       resetPasswordExpire: { $gt: Date.now() }
     });
 
     if (!user) {
-      return res.status(400).json({ message: "Token inválido o expirado" });
+      return res.status(400).json({ status: 'error', message: 'Token inválido o expirado' });
+    }
+
+    const isSamePassword = isValidPassword(user, newPassword);
+    if (isSamePassword) {
+      return res.status(400).json({ status: 'error', message: 'La nueva contraseña no puede ser igual a la anterior.' });
     }
 
     user.password = createHash(newPassword);
@@ -93,10 +104,10 @@ const resetPassword = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ message: "Contraseña actualizada correctamente." });
+    res.status(200).json({ status: 'success', message: 'Contraseña actualizada correctamente.' });
   } catch (error) {
     console.error("Error en resetPassword:", error.message);
-    res.status(500).json({ message: "Error al restablecer la contraseña." });
+    res.status(500).json({ status: 'error', message: 'Error al restablecer la contraseña.' });
   }
 };
 

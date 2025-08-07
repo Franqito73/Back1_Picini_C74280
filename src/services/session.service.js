@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const SECRET_KEY = process.env.JWT_SECRET || 'jwtSecretFranco123';
 
-const register = async ({ first_name, last_name, email, age, password }) => {
+const register = async ({ first_name, last_name, email, age, password,phoneNumber }) => {
   const existingUser = await userModel.findOne({ email });
   if (existingUser) {
     throw new Error('El usuario ya existe.');
@@ -17,7 +17,8 @@ const register = async ({ first_name, last_name, email, age, password }) => {
     last_name,
     email,
     age,
-    password: hashedPassword
+    password: hashedPassword,
+    phoneNumber
   });
 
   await newUser.save();
@@ -25,7 +26,8 @@ const register = async ({ first_name, last_name, email, age, password }) => {
   return {
     id: newUser._id,
     email: newUser.email,
-    role: newUser.role
+    role: newUser.role,
+    phoneNumber: newUser.phoneNumber
   };
 };
 
@@ -40,7 +42,8 @@ const login = async ({ email, password }) => {
     {
       id: user._id,
       email: user.email,
-      role: user.role
+      role: user.role,
+      phoneNumber: user.phoneNumber
     },
     SECRET_KEY,
     { expiresIn: '1h' }
