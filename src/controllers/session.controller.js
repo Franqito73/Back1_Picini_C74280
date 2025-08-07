@@ -3,11 +3,20 @@ const UserDTO = require('../dto/user.dto');
 const userModel = require('../models/user.model');
 const { createHash, isValidPassword } = require('../utils/pass');
 const { sendPasswordResetEmail } = require('../services/email.service');
+const sendSMS = require('../utils/twilio');
+
 
 const registerUser = async (req, res) => {
   try {
     const userData = req.body;
     const user = await sessionService.register(userData);
+
+    if (user.phoneNumber) {
+      await sendSMS(
+        user.phoneNumber,
+        `Hola ${userData.first_name}! Tu cuenta fue creada exitosamente en nuestro sitio.`
+      );
+    }
     res.status(201).json({
       message: "Usuario registrado con éxito.",
       user
