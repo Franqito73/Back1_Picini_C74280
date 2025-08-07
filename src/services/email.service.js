@@ -1,14 +1,15 @@
-const transporter = require('../utils/nodemailer');
+const sendEmail = require('../utils/sendEmail');
 
 async function sendPasswordResetEmail(email) {
-  const mailOptions = {
-    from: `"Soporte" <${process.env.EMAIL_USER}>`,
+  const htmlContent = `
+    <p>Hola, haz clic <a href="http://localhost:8000/reset-password">aquí</a> para restablecer tu contraseña.</p>
+  `;
+
+  await sendEmail({
     to: email,
     subject: 'Restablecer contraseña',
-    html: `<p>Hola, haz clic <a href="http://localhost:8000/reset-password">aquí</a> para restablecer tu contraseña.</p>`,
-  };
-
-  await transporter.sendMail(mailOptions);
+    html: htmlContent,
+  });
 }
 
 module.exports = {

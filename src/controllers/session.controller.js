@@ -52,6 +52,7 @@ const getCurrentUser = (req, res) => {
     res.status(500).json({ message: "Error al obtener el usuario actual." });
   }
 };
+
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
   try {
